@@ -1,0 +1,57 @@
+class BarberShop:
+    def __init__(self, name):
+        self.name = name
+        self.available_appointments = {}
+
+    def add_appointment(self, date, time, customer_name):
+        if date not in self.available_appointments:
+            self.available_appointments[date] = {}
+        if time not in self.available_appointments[date]:
+            self.available_appointments[date][time] = customer_name
+            return True
+        else:
+            return False
+
+    def is_available(self, date, time):
+        return date in self.available_appointments and time not in self.available_appointments[date]
+import datetime
+
+def get_appointment_details():
+    date_str = input("Enter the date for the appointment (YYYY-MM-DD): ")
+    time_str = input("Enter the time for the appointment (HH:MM): ")
+    customer_name = input("Enter your name: ")
+    appointment_date = datetime.datetime.strptime(date_str, "%Y-%m-%d")
+    appointment_time = datetime.datetime.strptime(time_str, "%H:%M").time()
+    return appointment_date, appointment_time, customer_name
+
+def schedule_appointment(barber_shop):
+    appointment_date, appointment_time, customer_name = get_appointment_details()
+
+    if barber_shop.is_available(appointment_date, appointment_time):
+        success = barber_shop.add_appointment(appointment_date, appointment_time, customer_name)
+        if success:
+            print("Appointment successfully scheduled!")
+        else:
+            print("Sorry, the selected time slot is already taken.")
+    else:
+        print("The selected date and time are not available.")
+
+def main():
+    barber_shop_name = input("Enter the name of the barber shop: ")
+    barber_shop = BarberShop(barber_shop_name)
+
+    while True:
+        print("\n1. Schedule an appointment")
+        print("2. Exit")
+        choice = int(input("Enter your choice: "))
+
+        if choice == 1:
+            schedule_appointment(barber_shop)
+        elif choice == 2:
+            break
+        else:
+            print("Invalid choice. Try again.")
+            continue
+
+if __name__ == "__main__":
+    main()
